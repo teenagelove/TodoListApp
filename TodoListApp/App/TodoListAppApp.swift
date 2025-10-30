@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct TodoListAppApp: App {
+    @State var navigationService: NavigationServiceProtocol
+
+    init() {
+        navigationService = NavigationAssembly.build()
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(navigationService: navigationService)
         }
     }
 }
