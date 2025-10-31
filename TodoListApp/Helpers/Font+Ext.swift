@@ -8,10 +8,17 @@
 import SwiftUI
 
 extension Font {
+
     // MARK: - Medium
+
     static let medium16 = Font.system(size: 16, weight: .medium)
 
     // MARK: - Regular
-    static let regular12 = Font.system(size: 12, weight: .regular)
+
     static let regular11 = Font.system(size: 11, weight: .regular)
+    static let regular12 = Font.system(size: 12, weight: .regular)
+    static let regular16 = Font.system(size: 16, weight: .regular)
+
+    // MARK: - Bold
+    static let bold34 = Font.system(size: 34, weight: .bold)
 }
