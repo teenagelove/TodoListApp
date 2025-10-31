@@ -1,14 +1,15 @@
+//
+//  MockTodoListPresenter.swift
+//  TodoListApp
+//
+//  Created by Danil Kazakov on 31.10.2025.
+//
 
-import Foundation
-import Observation
 import SwiftUI
 
 // MARK: - Mock Presenter для превью
-
-@MainActor
-@Observable
 final class MockTodoListPresenter: TodoListPresenterProtocol {
-
+    
     var state: TodoListPresenter.State
     
     init(state: TodoListPresenter.State) {
@@ -16,8 +17,10 @@ final class MockTodoListPresenter: TodoListPresenterProtocol {
     }
     
     func fetchTodos() async { /* Do nothing for mock */ }
-    func didRequestDeleteTasks(at offsets: IndexSet) { /* Do nothing for mock */ }
+    func didRequestDeleteTask(task: TodoTask) { /* Do nothing for mock */ }
     func didSelectTask(task: TodoTask) { /* Do nothing for mock */ }
+    func didTapAddButton() { /* Do nothing for mock */ }
+    func didCompleteTaskToggle(task: TodoTask) { /* Do nothing for mock */ }
 }
 
 // MARK: - Расширение для TodoListModule для удобства превью
