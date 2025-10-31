@@ -12,6 +12,20 @@ struct TodoDetailAssembly {
         container: DependencyContainerProtocol,
         todo: TodoTask
     ) -> some View {
-        TodoDetailView(todo: todo)
+        let interactor = TodoDetailInteractor(
+            storageService: container.storageService
+        )
+
+        let router = TodoDetailRouter(
+            navigationService: container.navigationService
+        )
+
+        let presenter = TodoDetailPresenter(
+            task: todo,
+            interactor: interactor,
+            router: router
+        )
+
+        return TodoDetailView(presenter: presenter)
     }
 }

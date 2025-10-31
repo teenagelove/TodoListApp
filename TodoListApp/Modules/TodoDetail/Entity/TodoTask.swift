@@ -21,7 +21,7 @@ struct TodoTask: Identifiable, Hashable, Codable {
 
     init(
         id: UUID = UUID(),
-        title: String,
+        title: String = "",
         description: String = "",
         isCompleted: Bool = false,
         createdAt: Date = Date()
@@ -43,7 +43,7 @@ struct TodoTask: Identifiable, Hashable, Codable {
         self.title = todo
         self.isCompleted = completed
 
-        self.description = title
+        self.description = todo
         self.createdAt = Date()
     }
 }

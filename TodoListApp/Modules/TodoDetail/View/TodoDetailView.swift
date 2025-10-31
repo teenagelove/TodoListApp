@@ -8,34 +8,58 @@
 import SwiftUI
 
 struct TodoDetailView: View {
-    // MARK: - Properties
-    let todo: TodoTask
+
+    // MARK: - State
+
+    @State var presenter: TodoDetailPresenterProtocol
+
+    // MARK: - Body
 
     var body: some View {
         content
-            .navigationBarBackButtonHidden()
+            .navigationBarBackButtonHidden(true)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    BackButton()
+                ToolbarItem(placement: .topBarLeading) {
+                    BackButton {
+                        Task { await presenter.save() }
+                    }
                 }
             }
+            .padding(.horizontal)
     }
 }
 
 private extension TodoDetailView {
+
     // MARK: - View Components
+
+    @ViewBuilder
     var content: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(todo.title)
-                .font(.medium16)
-            Text(todo.createdAt.shortDate)
+        VStack(alignment: .leading) {
+            TextField(
+                Constants.String.nameString,
+                text: $presenter.title,
+                axis: .vertical
+            )
+            .font(.bold34)
+
+            Text(presenter.dateString)
                 .font(.regular12)
-            Text(todo.description)
-                .font(.regular11)
+                .foregroundStyle(.gray)
+
+            TextField(
+                Constants.String.descriptionString,
+                text: $presenter.description,
+                axis: .vertical
+            )
+            .font(.regular16)
+            .padding(.top, 16)
+
+            Spacer()
         }
     }
 }
 
 #Preview {
-    TodoDetailView(todo: TodoTask(title: "Check", description: "Description"))
+    TodoDetailView.buildPreview
 }
