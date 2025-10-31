@@ -8,19 +8,23 @@
 import SwiftUI
 
 struct BackButton: View {
+    let action: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         Button{
-            dismiss()
+            if let action {
+                action()
+            } else {
+                dismiss()
+            }
         } label: {
             Image(systemName: Constants.SFSymbol.chevronLeft)
-                .foregroundColor(.blue)
-                .imageScale(.large)
+            Text(Constants.String.backString)
         }
     }
 }
 
 #Preview {
-    BackButton()
+    BackButton { }
 }
