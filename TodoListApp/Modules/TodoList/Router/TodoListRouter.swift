@@ -6,14 +6,20 @@
 //
 
 final class TodoListRouter: TodoListRouterProtocol {
-    
+
+    // MARK: - Dependencies
+
     private var navigationService: NavigationServiceProtocol
+
+    // MARK: - Initialization
 
     init(navigationService: NavigationServiceProtocol) {
         self.navigationService = navigationService
     }
 
-    func navigateToTodoDetail(todo: TodoTask) {
-        navigationService.items.append(.todoDetail(todo))
+    // MARK: - Public Methods
+
+    func navigateToTodoDetail(for todo: TodoTask) {
+        navigationService.push(to: .todoDetail(todo))
     }
 }

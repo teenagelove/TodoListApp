@@ -11,7 +11,7 @@ import Foundation
 @MainActor
 @Observable
 final class TodoListPresenter: TodoListPresenterProtocol {
-    
+
     enum State {
         case idle
         case loading
@@ -19,9 +19,16 @@ final class TodoListPresenter: TodoListPresenterProtocol {
         case error(String)
     }
     
+    // MARK: - Dependencies
+    
     private let interactor: TodoListInteractorProtocol
     private let router: TodoListRouterProtocol
+    
+    // MARK: - State
+    
     var state: State = .idle
+    
+    // MARK: - Initialization
     
     init(
         interactor: TodoListInteractorProtocol,
@@ -31,8 +38,11 @@ final class TodoListPresenter: TodoListPresenterProtocol {
         self.router = router
     }
     
+    // MARK: - Public Methods
+    
     func fetchTodos() async {
         state = .loading
+
         do {
             let todos = try await interactor.fetchTodos()
             state = .loaded(todos)
@@ -41,14 +51,23 @@ final class TodoListPresenter: TodoListPresenterProtocol {
         }
     }
     
-    func deleteTodo(id: UUID) async {
-        do {
-            if case .loaded(let todos) = state {
-                try await interactor.deleteTodo(id: id)
-                await fetchTodos()
+    func didRequestDeleteTasks(at offsets: IndexSet) {
+        guard case .loaded(var tasks) = state, let index = offsets.first else { return }
+
+        let taskToDelete = tasks[index]
+
+        Task {
+            do {
+                try await interactor.deleteTodo(id: taskToDelete.id)
+                tasks.remove(at: index)
+                state = .loaded(tasks)
+            } catch {
+                state = .error(error.localizedDescription)
             }
-        } catch {
-            state = .error(error.localizedDescription)
         }
+    }
+    
+    func didSelectTask(task: TodoTask) {
+        router.navigateToTodoDetail(for: task)
     }
 }

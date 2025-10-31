@@ -7,7 +7,10 @@
 
 import Foundation
 
+@MainActor
 protocol TodoListPresenterProtocol {
+    var state: TodoListPresenter.State { get }
     func fetchTodos() async
-    func deleteTodo(id: UUID) async
+    func didRequestDeleteTasks(at offsets: IndexSet)
+    func didSelectTask(task: TodoTask)
 }

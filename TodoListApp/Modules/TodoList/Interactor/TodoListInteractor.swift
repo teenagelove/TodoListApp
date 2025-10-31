@@ -8,43 +8,54 @@
 import Foundation
 
 final class TodoListInteractor: TodoListInteractorProtocol {
-    
+
+    // MARK: - Dependencies
+
     private let networkService: NetworkServiceProtocol
     private let storageService: StorageServiceProtocol
-    
+
+    // MARK: - Initialization
+
     init(
         networkService: NetworkServiceProtocol,
-        coreDataService: StorageServiceProtocol
+        storageService: StorageServiceProtocol
     ) {
         self.networkService = networkService
-        self.storageService = coreDataService
+        self.storageService = storageService
     }
-    
+
+    // MARK: - Public Methods
+
     func fetchTodos() async throws -> [TodoTask] {
-        let todos = try await fetchTodosFromCoreData()
-        
-        return !todos.isEmpty ? todos : try await fetchTodosFromNetwork()
+        let localTodos = try await storageService.fetchTodos()
+
+        if !localTodos.isEmpty {
+            return localTodos
+        }
+
+        let networkTodos = try await networkService.fetchTodos()
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for todo in networkTodos {
+                group.addTask {
+                    try await self.storageService.saveTodo(todoTask: todo)
+                }
+            }
+            try await group.waitForAll()
+        }
+
+        return try await storageService.fetchTodos()
     }
-    
+
     func saveTodo(_ todoTask: TodoTask) async throws {
         try await storageService.saveTodo(todoTask: todoTask)
     }
-    
+
     func updateTodo(_ todoTask: TodoTask) async throws {
         try await storageService.updateTodo(todoTask: todoTask)
     }
-    
+
     func deleteTodo(id: UUID) async throws {
         try await storageService.deleteTodo(id: id)
-    }
-}
-
-private extension TodoListInteractor {
-    func fetchTodosFromNetwork() async throws -> [TodoTask] {
-        try await networkService.fetchTodos()
-    }
-    
-    func fetchTodosFromCoreData() async throws -> [TodoTask] {
-        try await storageService.fetchTodos()
     }
 }

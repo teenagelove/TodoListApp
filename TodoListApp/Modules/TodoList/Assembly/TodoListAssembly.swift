@@ -7,21 +7,20 @@
 
 import SwiftUI
 
-final class TodoListAssembly: ViewAssemblyProtocol {
-    
-    static func build() -> TodoListView {
-        let networkService = NetworkService()
-        let coreDataService = CoreDataService()
-        
+struct TodoListAssembly: TodoListAssemblyProtocol {
+
+    // MARK: - Public Methods
+
+    static func build(container: DependencyContainerProtocol) -> some View {
         let interactor  = TodoListInteractor(
-            networkService: networkService,
-            coreDataService: coreDataService
+            networkService: container.networkService,
+            storageService: container.storageService
         )
-        
+
         let router = TodoListRouter(
-            navigationService: NavigationAssembly.build()
+            navigationService: container.navigationService
         )
-        
+
         let presenter = TodoListPresenter(
             interactor: interactor,
             router: router
