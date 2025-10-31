@@ -29,9 +29,12 @@ struct TodoRowView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(task.title)
                     .font(.medium16)
+                    .foregroundStyle(task.isCompleted ? .gray : .primary)
+                    .strikethrough(task.isCompleted, color: .gray)
 
                 Text(task.description)
                     .font(.regular12)
+                    .foregroundStyle(task.isCompleted ? .gray : .primary)
 
                 Text(task.createdAt.shortDate)
                     .font(.regular12)

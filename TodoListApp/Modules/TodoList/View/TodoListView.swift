@@ -20,9 +20,7 @@ struct TodoListView: View {
             .navigationTitle("Задачи")
             .toolbar { toolbarContent }
             .toolbarRole(.editor)
-            .task {
-                await presenter.fetchTodos()
-            }
+            .task { await presenter.fetchTodos() }
     }
 }
 
@@ -54,20 +52,29 @@ private extension TodoListView {
     }
 
     var emptyTasksView: some View {
-        Text("Список задач пуст.")
+        Text(Constants.String.emptyString)
+            .font(.title2)
     }
 
     func tasksListView(tasks: [TodoTask]) -> some View {
-        List {
-            ForEach(tasks) { task in
-                Button {
-                    presenter.didSelectTask(task: task)
-                } label: {
-                    TodoRowView(task: task)
+        List(tasks) { task in
+            TodoRowView(task: task)
+                .onTapGesture {
+                    presenter.didCompleteTaskToggle(task: task)
+                    //                        presenter.didSelectTask(task: task)
                 }
-                .buttonStyle(.plain)
-            }
-            .onDelete(perform: presenter.didRequestDeleteTasks)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        presenter.didRequestDeleteTask(task: task)
+                    } label: {
+                        Label(
+                            Constants.String.deleteString,
+                            systemImage: Constants.SFSymbol.trash
+                        )
+                    }
+                }
+                .listRowSeparator(.hidden, edges: .top)
+                .listRowSeparator(.visible, edges: .bottom)
         }
         .listStyle(.plain)
     }
@@ -82,6 +89,7 @@ private extension TodoListView {
             ToolbarItem(placement: .bottomBar) {
                 Text("\(tasks.count) задач")
                     .font(.regular11)
+                    .frame(minWidth: 50) // Hardcoded to prevent compression
             }
         }
 
@@ -91,7 +99,7 @@ private extension TodoListView {
 
         ToolbarItem(placement: .bottomBar) {
             Button {
-                // TODO: - Add task action
+                presenter.didTapAddButton()
             } label: {
                 Image(systemName: Constants.SFSymbol.pencil)
             }

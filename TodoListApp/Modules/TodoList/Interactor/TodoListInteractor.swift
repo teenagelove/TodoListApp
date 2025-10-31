@@ -35,14 +35,7 @@ final class TodoListInteractor: TodoListInteractorProtocol {
 
         let networkTodos = try await networkService.fetchTodos()
 
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            for todo in networkTodos {
-                group.addTask {
-                    try await self.storageService.saveTodo(todoTask: todo)
-                }
-            }
-            try await group.waitForAll()
-        }
+        try await self.storageService.saveTodos(todoTasks: networkTodos)
 
         return try await storageService.fetchTodos()
     }

@@ -51,15 +51,13 @@ final class TodoListPresenter: TodoListPresenterProtocol {
         }
     }
     
-    func didRequestDeleteTasks(at offsets: IndexSet) {
-        guard case .loaded(var tasks) = state, let index = offsets.first else { return }
-
-        let taskToDelete = tasks[index]
+    func didRequestDeleteTask(task: TodoTask) {
+        guard case .loaded(var tasks) = state else { return }
 
         Task {
             do {
-                try await interactor.deleteTodo(id: taskToDelete.id)
-                tasks.remove(at: index)
+                try await interactor.deleteTodo(id: task.id)
+                tasks.removeAll { $0.id == task.id }
                 state = .loaded(tasks)
             } catch {
                 state = .error(error.localizedDescription)
@@ -69,5 +67,32 @@ final class TodoListPresenter: TodoListPresenterProtocol {
     
     func didSelectTask(task: TodoTask) {
         router.navigateToTodoDetail(for: task)
+    }
+
+    func didTapAddButton() {
+        let newTask = TodoTask()
+        router.navigateToTodoDetail(for: newTask)
+    }
+
+    func didCompleteTaskToggle(task: TodoTask) {
+        guard case .loaded(let tasks) = state else { return }
+
+        let updatedTask = task.toggledCompletion
+
+        updateTask(updatedTask)
+
+        state = .loaded(tasks.map { $0.id == updatedTask.id ? updatedTask : $0 })
+    }
+}
+
+private extension TodoListPresenter {
+    func updateTask(_ task: TodoTask) {
+        Task {
+            do {
+                try await interactor.updateTodo(task)
+            } catch {
+                state = .error(error.localizedDescription)
+            }
+        }
     }
 }
