@@ -9,15 +9,28 @@ import SwiftUI
 
 @main
 struct TodoListAppApp: App {
-    @State var navigationService: NavigationServiceProtocol
+
+    // MARK: - Properties
+
+    private let container: DependencyContainerProtocol
+
+    // MARK: - Initialization
 
     init() {
-        navigationService = NavigationAssembly.build()
+        let assembly = DependencyContainerAssembly()
+        self.container = assembly.build()
     }
+
+//    init(assembly: DependencyContainerAssemblyProtocol) {
+//        self.container = assembly.build()
+//    }
+
+    // MARK: - Body
 
     var body: some Scene {
         WindowGroup {
-            RootView(navigationService: navigationService)
+            RootView(container: container)
+                .preferredColorScheme(.dark)
         }
     }
 }

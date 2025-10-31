@@ -8,22 +8,34 @@
 import SwiftUI
 
 struct RootView: View {
+
+    // MARK: - Dependencies
+
+    let container: DependencyContainerProtocol
     @State var navigationService: NavigationServiceProtocol
 
+    // MARK: - Initialization
+
+    init(
+        container: DependencyContainerProtocol
+    ) {
+        self.container = container
+        navigationService = container.navigationService
+    }
+
+    // MARK: - Body
+
     var body: some View {
-        NavigationStack(path: $navigationService.items) {
-            TodoListAssembly.build(navigationService: navigationService)
-                .navigationDestination(for: Module.self) { module in
-                    switch module {
-//                    case .todoDetail(let TodoTask):
-//                        TodoDetailAssembly.build(todoTask: TodoTask)
-                    default:
-                        fatalError()
+        NavigationStack(path: $navigationService.path) {
+            TodoListAssembly.build(container: container)
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .todoList:
+                        EmptyView()
+                    case .todoDetail(let todo):
+                        TodoDetailAssembly.build(container: container, todo: todo)
                     }
                 }
         }
     }
-}
-
-#Preview {
 }
