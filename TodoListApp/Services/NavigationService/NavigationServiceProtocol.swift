@@ -5,6 +5,10 @@
 //  Created by Danil Kazakov on 30.10.2025.
 //
 
+import SwiftUI
+
 protocol NavigationServiceProtocol {
-    var items: [Module] { get set }
+    var path: NavigationPath { get set}
+    func push(to route: Route)
+    func pop()
 }

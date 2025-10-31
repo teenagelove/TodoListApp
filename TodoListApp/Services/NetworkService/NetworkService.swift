@@ -8,14 +8,20 @@
 import Foundation
 
 final class NetworkService: NetworkServiceProtocol {
+
+    // MARK: - Properties
+
     private let decoder = JSONDecoder()
+    private let session = URLSession.shared
+
+    // MARK: - Public Methods
 
     func fetchTodos() async throws -> [TodoTask] {
         guard let url = URL(string: "https://dummyjson.com/todos") else {
             throw URLError(.badURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await session.data(from: url)
 
         guard let httpResponse = response as? HTTPURLResponse,
               (200..<300).contains(httpResponse.statusCode) else {
@@ -23,10 +29,10 @@ final class NetworkService: NetworkServiceProtocol {
         }
 
         do {
-            let response = try decoder.decode(TodoTask.self, from: data)
-            return [response]
+            let todoList = try decoder.decode(TodoList.self, from: data)
+            return todoList.todos
         } catch {
-            throw URLError(.cannotDecodeContentData)
+            throw URLError(.cannotParseResponse)
         }
     }
 }

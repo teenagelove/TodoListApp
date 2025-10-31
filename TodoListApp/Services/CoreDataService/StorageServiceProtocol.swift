@@ -1,11 +1,11 @@
 //
-//  CoreDataServiceProtocol.swift
+//  StorageServiceProtocol.swift
 //  TodoListApp
 //
 //  Created by Danil Kazakov on 30.10.2025.
 //
 
-import Foundation
+import CoreData
 
 protocol StorageServiceProtocol {
     func fetchTodos() async throws -> [TodoTask]
