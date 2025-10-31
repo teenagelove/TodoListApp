@@ -9,6 +9,7 @@ import SwiftUI
 
 protocol NavigationServiceProtocol {
     var path: NavigationPath { get set}
+
     func push(to route: Route)
     func pop()
 }
