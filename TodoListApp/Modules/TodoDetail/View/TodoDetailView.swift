@@ -21,7 +21,7 @@ struct TodoDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     BackButton {
-                        Task { await presenter.save() }
+                        Task { await presenter.saveTodoTask() }
                     }
                 }
             }

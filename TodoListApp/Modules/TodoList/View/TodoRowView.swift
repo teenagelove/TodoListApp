@@ -11,40 +11,50 @@ struct TodoRowView: View {
 
     // MARK: - Properties
 
-    let task: TodoTask
+    let todoTask: TodoTask
 
     // MARK: - Body
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
-            Image(
-                systemName: task.isCompleted
-                    ? Constants.SFSymbol.checkmarkedCircle
-                    : Constants.SFSymbol.circle
-            )
-            .resizable()
-            .frame(width: 24, height: 24)
-            .foregroundColor(task.isCompleted ? .yellow : .gray)
+            completionIcon
+            taskDetailsView
+        }
+    }
+}
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.medium16)
-                    .foregroundStyle(task.isCompleted ? .gray : .primary)
-                    .strikethrough(task.isCompleted, color: .gray)
+// MARK: - Private Views
+private extension TodoRowView {
+    var completionIcon: some View {
+        Image(
+            systemName: todoTask.isCompleted
+                ? Constants.SFSymbol.checkmarkedCircle
+                : Constants.SFSymbol.circle
+        )
+        .resizable()
+        .frame(width: 24, height: 24)
+        .foregroundColor(todoTask.isCompleted ? .yellow : .gray)
+    }
 
-                Text(task.description)
-                    .font(.regular12)
-                    .foregroundStyle(task.isCompleted ? .gray : .primary)
+    var taskDetailsView: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(todoTask.title)
+                .font(.medium16)
+                .foregroundStyle(todoTask.isCompleted ? .gray : .primary)
+                .strikethrough(todoTask.isCompleted, color: .gray)
 
-                Text(task.createdAt.shortDate)
-                    .font(.regular12)
-                    .foregroundColor(.gray)
-            }
+            Text(todoTask.description)
+                .font(.regular12)
+                .foregroundStyle(todoTask.isCompleted ? .gray : .primary)
+
+            Text(todoTask.createdAt.shortDate)
+                .font(.regular12)
+                .foregroundColor(.gray)
         }
     }
 }
 
 #Preview {
-    TodoRowView(task: TodoTask(title: "Check", description: "Description"))
+    TodoRowView(todoTask: TodoTask.mockTodoTask)
         .frame(width: 300, height: 50)
 }

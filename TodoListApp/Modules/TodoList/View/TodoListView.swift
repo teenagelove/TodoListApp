@@ -12,15 +12,19 @@ struct TodoListView: View {
     // MARK: - State
 
     @State var presenter: TodoListPresenterProtocol
+    @State private var searchText = ""
 
     // MARK: - Body
 
     var body: some View {
         contentView
-            .navigationTitle("Задачи")
+            .navigationTitle(Constants.String.tasksString)
             .toolbar { toolbarContent }
-            .toolbarRole(.editor)
-            .task { await presenter.fetchTodos() }
+            .task { await presenter.fetchTodoTasks() }
+            .searchable(text: $searchText)
+            .onChange(of: searchText) {
+                presenter.didUpdateSearch(query: searchText)
+            }
     }
 }
 
@@ -34,15 +38,13 @@ private extension TodoListView {
             loadingView
         case .error(let message):
             ErrorView(message: message) {
-                Task {
-                    await presenter.fetchTodos()
-                }
+                Task { await presenter.fetchTodoTasks() }
             }
-        case .loaded(let tasks):
-            if tasks.isEmpty {
+        case .loaded(let todoTasks):
+            if todoTasks.isEmpty {
                 emptyTasksView
             } else {
-                tasksListView(tasks: tasks)
+                tasksListView(todoTasks: todoTasks)
             }
         }
     }
@@ -52,26 +54,26 @@ private extension TodoListView {
     }
 
     var emptyTasksView: some View {
-        Text(Constants.String.emptyString)
-            .font(.title2)
+        if searchText.isEmpty {
+            Text(Constants.String.emptyString)
+                .font(.title2)
+        } else {
+            Text(Constants.String.emptySearchString)
+                .font(.title2)
+        }
     }
 
-    func tasksListView(tasks: [TodoTask]) -> some View {
-        List(tasks) { task in
-            TodoRowView(task: task)
-                .onTapGesture {
-                    presenter.didCompleteTaskToggle(task: task)
-                    //                        presenter.didSelectTask(task: task)
+    func tasksListView(todoTasks: [TodoTask]) -> some View {
+        List(todoTasks) { todoTask in
+            TodoRowView(todoTask: todoTask)
+                .onTapGesture { presenter.didToggleTodoTaskCompletion(todoTask: todoTask) }
+                .contextMenu {
+                    EditButton { presenter.didSelectTodoTask(todoTask: todoTask) }
+                    ShareButton(todoTask: todoTask)
+                    DeleteButton { presenter.didRequestDeleteTodoTask(todoTask: todoTask) }
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    Button(role: .destructive) {
-                        presenter.didRequestDeleteTask(task: task)
-                    } label: {
-                        Label(
-                            Constants.String.deleteString,
-                            systemImage: Constants.SFSymbol.trash
-                        )
-                    }
+                    DeleteButton { presenter.didRequestDeleteTodoTask(todoTask: todoTask) }
                 }
                 .listRowSeparator(.hidden, edges: .top)
                 .listRowSeparator(.visible, edges: .bottom)
@@ -81,13 +83,13 @@ private extension TodoListView {
 
     @ToolbarContentBuilder
     var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .bottomBar) {
+       ToolbarItem(placement: .bottomBar) {
             Spacer()
         }
 
-        if case .loaded(let tasks) = presenter.state {
+        if case .loaded(let todoTasks) = presenter.state {
             ToolbarItem(placement: .bottomBar) {
-                Text("\(tasks.count) задач")
+                Text("\(todoTasks.count) \(Constants.String.countTasksString)")
                     .font(.regular11)
                     .frame(minWidth: 50) // Hardcoded to prevent compression
             }
@@ -108,9 +110,5 @@ private extension TodoListView {
 }
 
 #Preview {
-    TodoListAssembly.buildPreview(state: .loaded([
-        TodoTask(title: "Молоко", description: "Купить молока", isCompleted: false),
-        TodoTask(title: "Счета", description: "Заплатить по счетам", isCompleted: true),
-        TodoTask(title: "Мама", description: "Позвонить маме", isCompleted: false)
-    ]))
+    TodoListAssembly.buildPreview()
 }
