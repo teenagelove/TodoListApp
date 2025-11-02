@@ -13,7 +13,6 @@ enum Constants {
         static let chevronLeft  = "chevron.left"
         static let clockwise = "arrow.clockwise"
         static let triangle = "exclamationmark.triangle.fill"
-        static let trash = "trash"
     }
 
     enum String {
@@ -21,7 +20,17 @@ enum Constants {
         static let backString = "Назад"
         static let nameString = "Название"
         static let descriptionString = "Описание"
-        static let emptyString = "Список задач пуст."
+        static let emptyString = "Список задач пуст"
+        static let emptySearchString = "Ничего не найдено"
         static let deleteString = "Удалить"
+        static let editString = "Редактировать"
+        static let shareString = "Поделиться"
+        static let tasksString = "Задачи"
+        static let countTasksString = "задач"
+        static let searchPlaceholder = "Поиск"
+    }
+
+    enum API {
+        static let baseURL = "https://dummyjson.com/todos"
     }
 }
