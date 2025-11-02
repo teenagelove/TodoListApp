@@ -12,95 +12,94 @@ actor CoreDataService: StorageServiceProtocol {
     // MARK: - Properties
 
     private let persistentContainer: NSPersistentContainer
-    private let backgroundContext: NSManagedObjectContext
 
     // MARK: - Initialization
 
     init() {
-        let container = NSPersistentContainer(name: "TodoListApp")
-        container.loadPersistentStores { _, error in
+        persistentContainer = NSPersistentContainer(name: "TodoListApp")
+        persistentContainer.loadPersistentStores { _, error in
             if let error = error as? NSError {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        self.persistentContainer = container
-        let bgContext = container.newBackgroundContext()
-        bgContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.backgroundContext = bgContext
+        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
     }
 
     // MARK: - Public Methods
     
-    func fetchTodos() async throws -> [TodoTask] {
-        try await backgroundContext.perform {
+    func fetchTodoTasks() async throws -> [TodoTask] {
+        let context = persistentContainer.newBackgroundContext()
+        return try await context.perform {
             let fetchRequest = TaskEntity.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
-            let taskEntities = try self.backgroundContext.fetch(fetchRequest)
-            return taskEntities.map { $0.toTodoTask() }
+            let taskEntities = try context.fetch(fetchRequest)
+            return taskEntities.map { $0.mapToTodoTask() }
         }
     }
 
-    func fetchTodoById(id: UUID) async throws -> TodoTask? {
-        try await backgroundContext.perform {
+    func fetchTodoTaskById(id: UUID) async throws -> TodoTask? {
+        let context = persistentContainer.newBackgroundContext()
+        return try await context.perform {
             let fetchRequest = TaskEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
             fetchRequest.fetchLimit = 1
 
-            guard let entity = try self.backgroundContext.fetch(fetchRequest).first else {
-                return nil
-            }
-            return entity.toTodoTask()
+            return try context
+                .fetch(fetchRequest).first?
+                .mapToTodoTask()
         }
     }
 
-    func saveTodo(todoTask: TodoTask) async throws {
-        try await backgroundContext.perform {
-            let taskEntity = TaskEntity(context: self.backgroundContext)
-            taskEntity.id = todoTask.id
-            taskEntity.title = todoTask.title
-            taskEntity.taskDescription = todoTask.description
-            taskEntity.isCompleted = todoTask.isCompleted
-            taskEntity.createdAt = todoTask.createdAt
-            try self.backgroundContext.save()
-        }
+    func saveTodoTask(todoTask: TodoTask) async throws {
+        try await saveTodoTasks(todoTasks: [todoTask])
     }
 
-    func saveTodos(todoTasks: [TodoTask]) async throws {
-        try await backgroundContext.perform {
+    func saveTodoTasks(todoTasks: [TodoTask]) async throws {
+        let context = persistentContainer.newBackgroundContext()
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        try await context.perform {
             todoTasks.forEach { todoTask in
-                let taskEntity = TaskEntity(context: self.backgroundContext)
-                taskEntity.id = todoTask.id
-                taskEntity.title = todoTask.title
-                taskEntity.taskDescription = todoTask.description
-                taskEntity.isCompleted = todoTask.isCompleted
-                taskEntity.createdAt = todoTask.createdAt
+                let taskEntity = TaskEntity(context: context)
+                taskEntity.mapFromTodoTask(todoTask)
             }
-            try self.backgroundContext.save()
+            try context.save()
         }
     }
 
-    func updateTodo(todoTask: TodoTask) async throws {
-        try await backgroundContext.perform {
+    func updateTodoTask(todoTask: TodoTask) async throws {
+        let context = persistentContainer.newBackgroundContext()
+        try await context.perform {
             let fetchRequest = TaskEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", todoTask.id as CVarArg)
-            if let taskEntity = try self.backgroundContext.fetch(fetchRequest).first {
+            if let taskEntity = try context.fetch(fetchRequest).first {
                 taskEntity.title = todoTask.title
                 taskEntity.taskDescription = todoTask.description
                 taskEntity.isCompleted = todoTask.isCompleted
             }
-            try self.backgroundContext.save()
+            try context.save()
         }
     }
 
-    func deleteTodo(id: UUID) async throws {
-        try await backgroundContext.perform {
+    func deleteTodoTask(id: UUID) async throws {
+        let context = persistentContainer.newBackgroundContext()
+        try await context.perform {
             let fetchRequest = TaskEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-            if let taskEntity = try self.backgroundContext.fetch(fetchRequest).first {
-                self.backgroundContext.delete(taskEntity)
+            if let taskEntity = try context.fetch(fetchRequest).first {
+                context.delete(taskEntity)
             }
-            try self.backgroundContext.save()
+            try context.save()
+        }
+    }
+
+    func searchTodoTasks(query: String) async throws -> [TodoTask] {
+        let context = persistentContainer.newBackgroundContext()
+        return try await context.perform {
+            let fetchRequest = TaskEntity.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR taskDescription CONTAINS[c] %@", query, query)
+            let taskEntities = try context.fetch(fetchRequest)
+            return taskEntities.map { $0.mapToTodoTask() }
         }
     }
 }

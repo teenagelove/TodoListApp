@@ -8,10 +8,11 @@
 import CoreData
 
 protocol StorageServiceProtocol {
-    func fetchTodos() async throws -> [TodoTask]
-    func fetchTodoById(id: UUID) async throws -> TodoTask?
-    func saveTodo(todoTask: TodoTask) async throws
-    func saveTodos(todoTasks: [TodoTask]) async throws
-    func updateTodo(todoTask: TodoTask) async throws
-    func deleteTodo(id: UUID) async throws
+    func fetchTodoTasks() async throws -> [TodoTask]
+    func searchTodoTasks(query: String) async throws -> [TodoTask]
+    func fetchTodoTaskById(id: UUID) async throws -> TodoTask?
+    func saveTodoTask(todoTask: TodoTask) async throws
+    func saveTodoTasks(todoTasks: [TodoTask]) async throws
+    func updateTodoTask(todoTask: TodoTask) async throws
+    func deleteTodoTask(id: UUID) async throws
 }
