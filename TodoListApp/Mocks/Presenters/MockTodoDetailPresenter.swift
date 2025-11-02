@@ -28,8 +28,8 @@ final class MockTodoDetailPresenter: TodoDetailPresenterProtocol {
 extension TodoDetailView {
     static var buildPreview: some View {
         let mockPresenter = MockTodoDetailPresenter(
-            title: "Пример задачи",
-            description: "Это пример описания задачи для превью."
+            title: TodoTask.mockTodoTask.title,
+            description: TodoTask.mockTodoTask.description
         )
         return TodoDetailView(presenter: mockPresenter)
     }

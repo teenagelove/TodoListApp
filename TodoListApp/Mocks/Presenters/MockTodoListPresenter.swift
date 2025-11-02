@@ -8,6 +8,7 @@
 import SwiftUI
 
 // MARK: - Mock Presenter для превью
+
 final class MockTodoListPresenter: TodoListPresenterProtocol {
     
     var state: TodoListPresenter.State
@@ -16,11 +17,16 @@ final class MockTodoListPresenter: TodoListPresenterProtocol {
         self.state = state
     }
     
-    func fetchTodos() async { /* Do nothing for mock */ }
-    func didRequestDeleteTask(task: TodoTask) { /* Do nothing for mock */ }
-    func didSelectTask(task: TodoTask) { /* Do nothing for mock */ }
+    func fetchTodoTasks() async { /* Do nothing for mock */ }
+    func didRequestDeleteTask(todoTask: TodoTask) { /* Do nothing for mock */ }
+    func didSelectTask(todoTask: TodoTask) { /* Do nothing for mock */ }
     func didTapAddButton() { /* Do nothing for mock */ }
-    func didCompleteTaskToggle(task: TodoTask) { /* Do nothing for mock */ }
+    func didCompleteTaskToggle(todoTask: TodoTask) { /* Do nothing for mock */ }
+    func didUpdateSearch(query: String) { /* Do nothing for mock */ }
+
+    static func loadedMock() -> MockTodoListPresenter {
+        return MockTodoListPresenter(state: .loaded(TodoTask.mockTodoTasks))
+    }
 }
 
 // MARK: - Расширение для TodoListModule для удобства превью
@@ -28,5 +34,9 @@ final class MockTodoListPresenter: TodoListPresenterProtocol {
 extension TodoListAssembly {
     static func buildPreview(state: TodoListPresenter.State) -> some View {
         return TodoListView(presenter: MockTodoListPresenter(state: state))
+    }
+
+    static func buildPreview() -> some View {
+        return TodoListView(presenter: MockTodoListPresenter.loadedMock())
     }
 }
