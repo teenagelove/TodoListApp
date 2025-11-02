@@ -22,11 +22,11 @@ final class TodoDetailInteractor: TodoDetailInteractorProtocol {
 
     // MARK: - Public Methods
 
-    func saveTodo(_ todoTask: TodoTask) async throws {
-        if let _ = try await storageService.fetchTodoById(id: todoTask.id) {
-            try await storageService.updateTodo(todoTask: todoTask)
+    func saveTodoTask(_ todoTask: TodoTask) async throws {
+        if let _ = try await storageService.fetchTodoTaskById(id: todoTask.id) {
+            try await storageService.updateTodoTask(todoTask: todoTask)
         } else {
-            try await storageService.saveTodo(todoTask: todoTask)
+            try await storageService.saveTodoTask(todoTask: todoTask)
         }
     }
 }

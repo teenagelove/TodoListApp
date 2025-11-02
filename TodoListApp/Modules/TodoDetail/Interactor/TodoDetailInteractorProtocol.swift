@@ -9,6 +9,6 @@
 import Foundation
 
 protocol TodoDetailInteractorProtocol {
-    func saveTodo(_ todoTask: TodoTask) async throws
+    func saveTodoTask(_ todoTask: TodoTask) async throws
 }
 

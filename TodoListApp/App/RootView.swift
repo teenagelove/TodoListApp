@@ -16,9 +16,7 @@ struct RootView: View {
 
     // MARK: - Initialization
 
-    init(
-        container: DependencyContainerProtocol
-    ) {
+    init(container: DependencyContainerProtocol) {
         self.container = container
         navigationService = container.navigationService
     }
@@ -32,8 +30,9 @@ struct RootView: View {
                     switch route {
                     case .todoList:
                         EmptyView()
-                    case .todoDetail(let todo):
-                        TodoDetailAssembly.build(container: container, todo: todo)
+                    case .todoDetail(let todoTask):
+                        TodoDetailAssembly
+                            .build(container: container, todoTask: todoTask)
                     }
                 }
         }

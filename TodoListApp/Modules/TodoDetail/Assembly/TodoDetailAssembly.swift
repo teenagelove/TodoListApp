@@ -10,7 +10,7 @@ import SwiftUI
 struct TodoDetailAssembly {
     static func build(
         container: DependencyContainerProtocol,
-        todo: TodoTask
+        todoTask: TodoTask
     ) -> some View {
         let interactor = TodoDetailInteractor(
             storageService: container.storageService
@@ -21,7 +21,7 @@ struct TodoDetailAssembly {
         )
 
         let presenter = TodoDetailPresenter(
-            task: todo,
+            todoTask: todoTask,
             interactor: interactor,
             router: router
         )

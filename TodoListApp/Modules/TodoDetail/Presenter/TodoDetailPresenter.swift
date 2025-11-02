@@ -17,7 +17,7 @@ final class TodoDetailPresenter: TodoDetailPresenterProtocol {
 
     private let interactor: TodoDetailInteractorProtocol
     private let router: TodoDetailRouterProtocol
-    private let task: TodoTask
+    private let todoTask: TodoTask
 
     // MARK: - State
     
@@ -26,27 +26,27 @@ final class TodoDetailPresenter: TodoDetailPresenterProtocol {
     var isFailed: Bool = false
 
     var dateString: String {
-        task.createdAt.shortDate
+        todoTask.createdAt.shortDate
     }
 
     // MARK: - Initialization
 
     init(
-        task: TodoTask,
+        todoTask: TodoTask,
         interactor: TodoDetailInteractorProtocol,
         router: TodoDetailRouterProtocol
     ) {
-        self.task = task
+        self.todoTask = todoTask
         self.interactor = interactor
         self.router = router
 
-        self.title = task.title
-        self.description = task.description
+        self.title = todoTask.title
+        self.description = todoTask.description
     }
 
     // MARK: - Public Methods
 
-    func save() async {
+    func saveTodoTask() async {
         guard !title.isEmpty && !description.isEmpty else {
             router.dismiss()
             return
@@ -54,16 +54,16 @@ final class TodoDetailPresenter: TodoDetailPresenterProtocol {
 
         isFailed = false
 
-        let task = TodoTask(
-            id: task.id,
+        let updatedTodoTask = TodoTask(
+            id: todoTask.id,
             title: title.isEmpty ? description : title,
             description: description,
-            isCompleted: task.isCompleted,
-            createdAt: task.createdAt
+            isCompleted: todoTask.isCompleted,
+            createdAt: todoTask.createdAt
         )
 
         do {
-            try await interactor.saveTodo(task)
+            try await interactor.saveTodoTask(updatedTodoTask)
             router.dismiss()
         } catch {
             isFailed = true

@@ -14,5 +14,5 @@ protocol TodoDetailPresenterProtocol: Observable {
     var description: String { get set }
     var dateString: String { get }
 
-    func save() async
+    func saveTodoTask() async
 }

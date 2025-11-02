@@ -40,56 +40,72 @@ final class TodoListPresenter: TodoListPresenterProtocol {
     
     // MARK: - Public Methods
     
-    func fetchTodos() async {
+    func fetchTodoTasks() async {
         state = .loading
 
         do {
-            let todos = try await interactor.fetchTodos()
-            state = .loaded(todos)
+            let todoTasks = try await interactor.fetchTodoTasks()
+            state = .loaded(todoTasks)
         } catch {
             state = .error(error.localizedDescription)
         }
     }
     
-    func didRequestDeleteTask(task: TodoTask) {
-        guard case .loaded(var tasks) = state else { return }
+    func didRequestDeleteTodoTask(todoTask: TodoTask) {
+        guard case .loaded(var todoTasks) = state else { return }
 
         Task {
             do {
-                try await interactor.deleteTodo(id: task.id)
-                tasks.removeAll { $0.id == task.id }
-                state = .loaded(tasks)
+                try await interactor.deleteTodoTask(id: todoTask.id)
+                todoTasks.removeAll { $0.id == todoTask.id }
+                state = .loaded(todoTasks)
             } catch {
                 state = .error(error.localizedDescription)
             }
         }
     }
     
-    func didSelectTask(task: TodoTask) {
-        router.navigateToTodoDetail(for: task)
+    func didSelectTodoTask(todoTask: TodoTask) {
+        router.navigateToTodoDetail(for: todoTask)
     }
 
     func didTapAddButton() {
-        let newTask = TodoTask()
-        router.navigateToTodoDetail(for: newTask)
+        let newTodoTask = TodoTask()
+        router.navigateToTodoDetail(for: newTodoTask)
     }
 
-    func didCompleteTaskToggle(task: TodoTask) {
-        guard case .loaded(let tasks) = state else { return }
+    func didToggleTodoTaskCompletion(todoTask: TodoTask) {
+        guard case .loaded(let todoTasks) = state else { return }
 
-        let updatedTask = task.toggledCompletion
+        let updatedTodoTask = todoTask.toggledCompletion
 
-        updateTask(updatedTask)
+        updateTodoTask(updatedTodoTask)
 
-        state = .loaded(tasks.map { $0.id == updatedTask.id ? updatedTask : $0 })
+        state = .loaded(todoTasks.map { $0.id == updatedTodoTask.id ? updatedTodoTask : $0 })
+    }
+
+    func didUpdateSearch(query: String) {
+        Task {
+            do {
+                if query.isEmpty {
+                    let todoTasks = try await interactor.fetchTodoTasks()
+                    state = .loaded(todoTasks)
+                } else {
+                    let todoTasks = try await interactor.searchTodoTasks(query: query)
+                    state = .loaded(todoTasks)
+                }
+            } catch {
+                state = .error(error.localizedDescription)
+            }
+        }
     }
 }
 
 private extension TodoListPresenter {
-    func updateTask(_ task: TodoTask) {
+    func updateTodoTask(_ todoTask: TodoTask) {
         Task {
             do {
-                try await interactor.updateTodo(task)
+                try await interactor.updateTodoTask(todoTask)
             } catch {
                 state = .error(error.localizedDescription)
             }

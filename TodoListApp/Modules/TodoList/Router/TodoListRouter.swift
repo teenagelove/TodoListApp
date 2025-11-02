@@ -19,7 +19,7 @@ final class TodoListRouter: TodoListRouterProtocol {
 
     // MARK: - Public Methods
 
-    func navigateToTodoDetail(for todo: TodoTask) {
-        navigationService.push(to: .todoDetail(todo))
+    func navigateToTodoDetail(for todoTask: TodoTask) {
+        navigationService.push(to: .todoDetail(todoTask))
     }
 }

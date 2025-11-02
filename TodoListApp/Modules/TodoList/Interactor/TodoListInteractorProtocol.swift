@@ -8,8 +8,9 @@
 import Foundation
 
 protocol TodoListInteractorProtocol {
-    func fetchTodos() async throws -> [TodoTask]
-    func saveTodo(_ todoTask: TodoTask) async throws
-    func updateTodo(_ todoTask: TodoTask) async throws
-    func deleteTodo(id: UUID) async throws
+    func fetchTodoTasks() async throws -> [TodoTask]
+    func searchTodoTasks(query: String) async throws -> [TodoTask]
+    func saveTodoTask(_ todoTask: TodoTask) async throws
+    func updateTodoTask(_ todoTask: TodoTask) async throws
+    func deleteTodoTask(id: UUID) async throws
 }

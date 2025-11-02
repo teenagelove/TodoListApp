@@ -6,5 +6,5 @@
 //
 
 protocol TodoListRouterProtocol {
-    func navigateToTodoDetail(for: TodoTask)
+    func navigateToTodoDetail(for todoTask: TodoTask)
 }

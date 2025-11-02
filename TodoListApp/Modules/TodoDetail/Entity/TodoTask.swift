@@ -36,14 +36,14 @@ struct TodoTask: Identifiable, Hashable, Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        let todo = try container.decode(String.self, forKey: .title)
+        let title = try container.decode(String.self, forKey: .title)
         let completed = try container.decode(Bool.self, forKey: .isCompleted)
 
         self.id = UUID()
-        self.title = todo
+        self.title = title
         self.isCompleted = completed
 
-        self.description = todo
+        self.description = title
         self.createdAt = Date()
     }
 }

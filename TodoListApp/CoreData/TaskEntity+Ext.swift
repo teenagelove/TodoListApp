@@ -8,7 +8,10 @@
 import Foundation
 
 extension TaskEntity {
-    func toTodoTask() -> TodoTask {
+
+    // MARK: - Public Methods
+
+    func mapToTodoTask() -> TodoTask {
         return TodoTask(
             id: self.id ?? UUID(),
             title: self.title ?? "",
@@ -16,5 +19,13 @@ extension TaskEntity {
             isCompleted: self.isCompleted,
             createdAt: self.createdAt ?? Date()
         )
+    }
+
+    func mapFromTodoTask(_ todoTask: TodoTask) {
+        self.id = todoTask.id
+        self.title = todoTask.title
+        self.taskDescription = todoTask.description
+        self.isCompleted = todoTask.isCompleted
+        self.createdAt = todoTask.createdAt
     }
 }
