@@ -14,7 +14,7 @@ final class MockTodoDetailPresenter: TodoDetailPresenterProtocol {
     var description: String
     var dateString: String
 
-    func save() async { /* Do nothing for mock */ }
+    func saveTodoTask() async { /* Do nothing for mock */ }
 
     init(title: String, description: String) {
         self.title = title

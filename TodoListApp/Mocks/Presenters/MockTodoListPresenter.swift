@@ -18,10 +18,10 @@ final class MockTodoListPresenter: TodoListPresenterProtocol {
     }
     
     func fetchTodoTasks() async { /* Do nothing for mock */ }
-    func didRequestDeleteTask(todoTask: TodoTask) { /* Do nothing for mock */ }
-    func didSelectTask(todoTask: TodoTask) { /* Do nothing for mock */ }
+    func didRequestDeleteTodoTask(todoTask: TodoTask) { /* Do nothing for mock */ }
+    func didSelectTodoTask(todoTask: TodoTask) { /* Do nothing for mock */ }
     func didTapAddButton() { /* Do nothing for mock */ }
-    func didCompleteTaskToggle(todoTask: TodoTask) { /* Do nothing for mock */ }
+    func didToggleTodoTaskCompletion(todoTask: TodoTask) { /* Do nothing for mock */ }
     func didUpdateSearch(query: String) { /* Do nothing for mock */ }
 
     static func loadedMock() -> MockTodoListPresenter {
