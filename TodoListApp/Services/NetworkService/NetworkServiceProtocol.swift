@@ -6,5 +6,5 @@
 //
 
 protocol NetworkServiceProtocol {
-    func fetchTodos() async throws -> [TodoTask]
+    func fetchTodoTasks() async throws -> [TodoTask]
 }

@@ -6,5 +6,9 @@
 //
 
 struct TodoList: Decodable {
-    let todos: [TodoTask]
+    let todoTasks: [TodoTask]
+    
+    private enum CodingKeys: String, CodingKey {
+        case todoTasks = "todos"
+    }
 }

@@ -16,21 +16,22 @@ final class NetworkService: NetworkServiceProtocol {
 
     // MARK: - Public Methods
 
-    func fetchTodos() async throws -> [TodoTask] {
-        guard let url = URL(string: "https://dummyjson.com/todos") else {
+    func fetchTodoTasks() async throws -> [TodoTask] {
+        guard let url = URL(string: Constants.API.baseURL) else {
             throw URLError(.badURL)
         }
 
         let (data, response) = try await session.data(from: url)
 
         guard let httpResponse = response as? HTTPURLResponse,
-              (200..<300).contains(httpResponse.statusCode) else {
+            (200..<300).contains(httpResponse.statusCode)
+        else {
             throw URLError(.badServerResponse)
         }
 
         do {
             let todoList = try decoder.decode(TodoList.self, from: data)
-            return todoList.todos
+            return todoList.todoTasks
         } catch {
             throw URLError(.cannotParseResponse)
         }
