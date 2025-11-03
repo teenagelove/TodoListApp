@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TodoListAssembly: TodoListAssemblyProtocol {
+struct TodoListAssembly {
 
     // MARK: - Public Methods
 
