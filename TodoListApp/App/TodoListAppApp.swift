@@ -21,9 +21,9 @@ struct TodoListAppApp: App {
         self.container = assembly.build()
     }
 
-//    init(assembly: DependencyContainerAssemblyProtocol) {
-//        self.container = assembly.build()
-//    }
+    init(assembly: DependencyContainerAssemblyProtocol) {
+        self.container = assembly.build()
+    }
 
     // MARK: - Body
 
