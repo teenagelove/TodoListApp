@@ -28,6 +28,10 @@ enum Constants {
         static let tasksString = "Задачи"
         static let countTasksString = "задач"
         static let searchPlaceholder = "Поиск"
+        static let errorTitleString = "Ошибка"
+        static let errorDescriptionString = "Не удалось загрузить данные. Пожалуйста, попробуйте еще раз."
+        static let okString = "ОК"
+        static let cancelString = "Отмена"
     }
 
     enum API {

@@ -8,11 +8,13 @@
 import SwiftUI
 
 // MARK: - Mock Presenter для превью
+
 final class MockTodoDetailPresenter: TodoDetailPresenterProtocol {
 
     var title: String
     var description: String
     var dateString: String
+    var isFailed: Bool = false
 
     func saveTodoTask() async { /* Do nothing for mock */ }
 

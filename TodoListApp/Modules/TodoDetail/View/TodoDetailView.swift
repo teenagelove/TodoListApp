@@ -26,6 +26,10 @@ struct TodoDetailView: View {
                 }
             }
             .padding(.horizontal)
+            .errorAlert(
+                isPresented: $presenter.isFailed,
+                retryAction: { Task { await presenter.saveTodoTask() } }
+            )
     }
 }
 
