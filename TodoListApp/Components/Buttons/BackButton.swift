@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct BackButton: View {
+
+    // MARK: - Properties
+
     let action: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
+
+    // MARK: - Body
 
     var body: some View {
         Button{

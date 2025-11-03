@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct ErrorView: View {
+
+    // MARK: - Properties
+
     let message: String
     let action: () -> Void
+
+    // MARK: - Body
 
     var body: some View {
         VStack(spacing: 12) {
@@ -21,6 +26,9 @@ struct ErrorView: View {
 }
 
 private extension ErrorView {
+
+    // MARK: - View Components
+
     var image: some View {
         Image(systemName: Constants.SFSymbol.triangle)
             .resizable()
