@@ -24,15 +24,3 @@ final class MockTodoDetailPresenter: TodoDetailPresenterProtocol {
         dateString = Date().shortDate
     }
 }
-
-// MARK: - Расширение для TodoListModule для удобства превью
-
-extension TodoDetailView {
-    static var buildPreview: some View {
-        let mockPresenter = MockTodoDetailPresenter(
-            title: TodoTask.mockTodoTask.title,
-            description: TodoTask.mockTodoTask.description
-        )
-        return TodoDetailView(presenter: mockPresenter)
-    }
-}

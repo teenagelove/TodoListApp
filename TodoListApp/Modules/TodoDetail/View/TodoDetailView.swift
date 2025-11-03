@@ -65,5 +65,5 @@ private extension TodoDetailView {
 }
 
 #Preview {
-    TodoDetailView.buildPreview
+    TodoDetailAssembly.buildPreview
 }

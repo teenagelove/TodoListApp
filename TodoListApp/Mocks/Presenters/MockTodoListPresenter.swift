@@ -28,15 +28,3 @@ final class MockTodoListPresenter: TodoListPresenterProtocol {
         return MockTodoListPresenter(state: .loaded(TodoTask.mockTodoTasks))
     }
 }
-
-// MARK: - Расширение для TodoListModule для удобства превью
-
-extension TodoListAssembly {
-    static func buildPreview(state: TodoListPresenter.State) -> some View {
-        return TodoListView(presenter: MockTodoListPresenter(state: state))
-    }
-
-    static func buildPreview() -> some View {
-        return TodoListView(presenter: MockTodoListPresenter.loadedMock())
-    }
-}

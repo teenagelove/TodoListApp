@@ -22,6 +22,7 @@ struct TodoListView: View {
             .toolbar { toolbarContent }
             .task { await presenter.fetchTodoTasks() }
             .searchable(text: $searchText)
+            .refreshable { await presenter.fetchTodoTasks() }
             .onChange(of: searchText) {
                 presenter.didUpdateSearch(query: searchText)
             }
