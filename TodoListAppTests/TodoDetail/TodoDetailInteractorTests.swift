@@ -15,7 +15,7 @@ final class TodoDetailInteractorTests: XCTestCase {
     private var sut: TodoDetailInteractor!
     private var storageServiceMock: StorageServiceMock!
 
-    // MARK: - Lifecycle
+    // MARK: - Test Life Cycle
 
     override func setUp() {
         super.setUp()

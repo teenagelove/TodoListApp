@@ -16,7 +16,7 @@ final class TodoListInteractorTests: XCTestCase {
     private var networkServiceMock: NetworkServiceMock!
     private var storageServiceMock: StorageServiceMock!
 
-    // MARK: - Lifecycle
+    // MARK: - Test Life Cycle
 
     override func setUp() {
         super.setUp()

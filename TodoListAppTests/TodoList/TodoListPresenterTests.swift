@@ -17,7 +17,7 @@ final class TodoListPresenterTests: XCTestCase {
     private var interactorMock: TodoListInteractorMock!
     private var routerMock: TodoListRouterMock!
 
-    // MARK: - Lifecycle
+    // MARK: - Test Life Cycle
 
     override func setUp() {
         super.setUp()

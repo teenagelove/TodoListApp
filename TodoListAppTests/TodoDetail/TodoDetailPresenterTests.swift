@@ -17,7 +17,7 @@ final class TodoDetailPresenterTests: XCTestCase {
     private var interactorMock: TodoDetailInteractorMock!
     private var routerMock: TodoDetailRouterMock!
 
-    // MARK: - Lifecycle
+    // MARK: - Test Life Cycle
 
     override func setUp() {
         super.setUp()
