@@ -13,15 +13,17 @@ final class NetworkService: NetworkServiceProtocol {
 
     private let decoder = JSONDecoder()
     private let session: URLSession
+    private let baseURL: String
 
-    init(session: URLSession = .shared) {
+    init(session: URLSession = .shared, baseURL: String = Constants.API.baseURL) {
         self.session = session
+        self.baseURL = baseURL
     }
 
     // MARK: - Public Methods
 
     func fetchTodoTasks() async throws -> [TodoTask] {
-        guard let url = URL(string: Constants.API.baseURL) else {
+        guard let url = URL(string: baseURL) else {
             throw URLError(.badURL)
         }
 
