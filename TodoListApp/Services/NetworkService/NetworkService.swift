@@ -12,7 +12,11 @@ final class NetworkService: NetworkServiceProtocol {
     // MARK: - Properties
 
     private let decoder = JSONDecoder()
-    private let session = URLSession.shared
+    private let session: URLSession
+
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
 
     // MARK: - Public Methods
 

@@ -7,7 +7,6 @@
 
 import Foundation
 
-@MainActor
 protocol TodoListPresenterProtocol {
     var state: TodoListPresenter.State { get }
 

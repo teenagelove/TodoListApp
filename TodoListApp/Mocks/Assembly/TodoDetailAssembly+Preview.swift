@@ -5,6 +5,8 @@
 //  Created by Danil Kazakov on 03.11.2025.
 //
 
+import SwiftUI
+
 extension TodoDetailAssembly {
     static var buildPreview: some View {
         let mockPresenter = MockTodoDetailPresenter(

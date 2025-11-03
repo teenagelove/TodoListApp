@@ -15,8 +15,8 @@ actor CoreDataService: StorageServiceProtocol {
 
     // MARK: - Initialization
 
-    init() {
-        persistentContainer = NSPersistentContainer(name: "TodoListApp")
+    init(persistentContainer: NSPersistentContainer = NSPersistentContainer(name: "TodoListApp")) {
+        self.persistentContainer = persistentContainer
         persistentContainer.loadPersistentStores { _, error in
             if let error = error as? NSError {
                 fatalError("Unresolved error \(error), \(error.userInfo)")

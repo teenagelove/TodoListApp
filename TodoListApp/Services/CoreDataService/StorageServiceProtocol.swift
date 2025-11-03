@@ -5,7 +5,7 @@
 //  Created by Danil Kazakov on 30.10.2025.
 //
 
-import CoreData
+import Foundation
 
 protocol StorageServiceProtocol {
     func fetchTodoTasks() async throws -> [TodoTask]

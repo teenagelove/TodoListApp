@@ -8,7 +8,6 @@
 
 import Foundation
 
-@MainActor
 protocol TodoDetailPresenterProtocol: Observable {
     var title: String { get set }
     var description: String { get set }
